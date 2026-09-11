@@ -9,6 +9,7 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{colortbl}
+\usepackage[export]{adjustbox} % Para alinhamento vertical perfeito (valign=c)
 
 % Paleta de cores institucional e corporativa
 \definecolor{VaisalaBlue}{RGB}{0, 45, 98}
@@ -33,7 +34,7 @@
 % Informacoes da Apresentacao
 \title[FAT -- Radar Banda C Vaisala WRS300]{Factory Acceptance Test (FAT) \\ Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}
 \subtitle{\textbf{Projeto Monitora Paran{\'a}} \\ Procedimentos de Aceita{\c{c}}{\~a}o em F{\'a}brica, Processador RVP10 e Paradigma SST}
-\author[Moises F. de Souza]{Eng. Moises F. de Souza}
+\author[Eng. Moises F. de Souza]{Eng. Moises F. de Souza}
 \institute[IAT / SIMEPAR / Vaisala]{
     \textbf{Adquirente:} Instituto {\'A}gua e Terra (IAT) -- Governo do Estado do Paran{\'a} \\
     \textbf{Consultoria e Apoio T{\'e}cnico:} SIMEPAR \\
@@ -44,24 +45,24 @@
 \begin{document}
 
 % -----------------------------------------------------------------------------
-% SLIDE DE CAPA COM LOGOS OFICIAIS
+% SLIDE DE CAPA COM LOGOS OFICIAIS PERFEITAMENTE ALINHADOS
 % -----------------------------------------------------------------------------
 \begin{frame}[plain]
-    \vspace{0.25cm}
-    % Faixa de Logos Institucionais
+    \vspace{0.35cm}
+    % Faixa de Logos Institucionais com Alinhamento Centralizado (valign=c)
     \begin{center}
         \begin{tabular}{c c c c}
-            \includegraphics[height=1.2cm]{img/logo_parana.png} & 
-            \hspace{0.5cm}
-            \includegraphics[height=1.2cm]{img/logo_iat.png} & 
-            \hspace{0.5cm}
-            \includegraphics[height=0.95cm]{img/logo_simepar.png} & 
-            \hspace{0.5cm}
-            \includegraphics[height=0.85cm]{img/logo_vaisala.png}
+            \includegraphics[valign=c, height=0.95cm]{img/logo_parana.png} & 
+            \hspace{0.55cm}
+            \includegraphics[valign=c, height=1.05cm]{img/logo_iat.png} & 
+            \hspace{0.55cm}
+            \includegraphics[valign=c, height=0.55cm]{img/logo_simepar.png} & 
+            \hspace{0.55cm}
+            \includegraphics[valign=c, height=0.42cm]{img/logo_vaisala.png}
         \end{tabular}
     \end{center}
 
-    \vspace{0.15cm}
+    \vspace{0.25cm}
     \centering
     {\Large \textbf{\textcolor{VaisalaBlue}{Factory Acceptance Test (FAT)}}} \\
     {\large \textbf{Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}} \\
@@ -448,4 +449,3 @@
 \end{frame}
 
 \end{document}
-
