@@ -9,7 +9,7 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{colortbl}
-\usepackage[export]{adjustbox} % Para alinhamento vertical perfeito (valign=c)
+\usepackage[export]{adjustbox}
 
 % Paleta de cores institucional e corporativa
 \definecolor{VaisalaBlue}{RGB}{0, 45, 98}
@@ -45,39 +45,36 @@
 \begin{document}
 
 % -----------------------------------------------------------------------------
-% SLIDE DE CAPA COM LOGOS OFICIAIS PERFEITAMENTE ALINHADOS
+% SLIDE DE CAPA COM LOGOS HARMONIZADOS
 % -----------------------------------------------------------------------------
 \begin{frame}[plain]
-    \vspace{0.35cm}
-    % Faixa de Logos Institucionais com Alinhamento Centralizado (valign=c)
+    \vspace{0.4cm}
     \begin{center}
-        \begin{tabular}{c c c c}
-            \includegraphics[valign=c, height=0.95cm]{img/logo_parana.png} & 
-            \hspace{0.55cm}
-            \includegraphics[valign=c, height=1.05cm]{img/logo_iat.png} & 
-            \hspace{0.55cm}
-            \includegraphics[valign=c, height=0.55cm]{img/logo_simepar.png} & 
-            \hspace{0.55cm}
-            \includegraphics[valign=c, height=0.42cm]{img/logo_vaisala.png}
+        \begin{tabular}{@{}c@{\hspace{0.8cm}}c@{\hspace{0.8cm}}c@{\hspace{0.8cm}}c@{}}
+            \includegraphics[valign=c, width=2.8cm, keepaspectratio]{img/logo_parana.png} &
+            \includegraphics[valign=c, width=2.0cm, keepaspectratio]{img/logo_iat.png} &
+            \includegraphics[valign=c, width=2.6cm, keepaspectratio]{img/logo_simepar.png} &
+            \includegraphics[valign=c, width=2.1cm, keepaspectratio]{img/logo_vaisala.png}
         \end{tabular}
     \end{center}
 
-    \vspace{0.25cm}
+    \vspace{0.35cm}
     \centering
     {\Large \textbf{\textcolor{VaisalaBlue}{Factory Acceptance Test (FAT)}}} \\
+    \vspace{0.1cm}
     {\large \textbf{Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}} \\
     \vspace{0.15cm}
     {\small \textbf{\textcolor{UFPRBlue}{PROJETO MONITORA PARAN{\'A}}}} \\
-    \vspace{0.25cm}
+    \vspace{0.3cm}
 
-    \begin{beamercolorbox}[sep=4pt,center,rounded=true,shadow=true]{block body}
+    \begin{beamercolorbox}[sep=5pt,center,rounded=true,shadow=true]{block body}
         \footnotesize
         \textbf{Adquirente / Contratante:} Instituto {\'A}gua e Terra (IAT) -- Governo do Estado do Paran{\'a} \\
         \textbf{Apoio T{\'e}cnico, Consultoria e Opera{\c{c}}{\~a}o:} SIMEPAR \\
         \textbf{Respons{\'a}vel T{\'e}cnico / Apresentador:} Eng. Moises F. de Souza
     \end{beamercolorbox}
 
-    \vspace{0.2cm}
+    \vspace{0.25cm}
     {\scriptsize Data: \today \quad | \quad Procedimentos em conformidade com o Manual Vaisala \texttt{M212986EN-C}}
 \end{frame}
 
