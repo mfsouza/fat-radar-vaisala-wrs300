@@ -1,0 +1,386 @@
+﻿\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{colortbl}
+
+% Paleta de cores corporativa e academica (Vaisala + UFPR)
+\definecolor{VaisalaBlue}{RGB}{0, 45, 98}
+\definecolor{UFPRBlue}{RGB}{0, 85, 164}
+\definecolor{AccentGreen}{RGB}{34, 139, 34}
+\definecolor{WarningYellow}{RGB}{218, 165, 32}
+
+\setbeamercolor{palette primary}{bg=VaisalaBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=UFPRBlue,fg=white}
+\setbeamercolor{palette tertiary}{bg=VaisalaBlue,fg=white}
+\setbeamercolor{structure}{fg=VaisalaBlue}
+\setbeamercolor{item}{fg=UFPRBlue}
+\setbeamercolor{block title}{bg=VaisalaBlue,fg=white}
+\setbeamercolor{block body}{bg=VaisalaBlue!10,fg=black}
+\setbeamercolor{block title alerted}{bg=red!75!black,fg=white}
+\setbeamercolor{block body alerted}{bg=red!10,fg=black}
+\setbeamercolor{block title example}{bg=AccentGreen,fg=white}
+\setbeamercolor{block body example}{bg=AccentGreen!10,fg=black}
+
+% Informacoes da Apresentacao
+\title[FAT -- Radar Banda C Vaisala WRS300]{Factory Acceptance Test (FAT) \\ Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}
+\subtitle{Procedimentos de Aceita{\c{c}}{\~a}o em F{\'a}brica, Processador RVP10 e Paradigma de Estado S{\'o}lido}
+\author[Moises F. de Souza]{Moises Fernandes de Souza}
+\institute[Vaisala / UFPR]{Engenharia de Radares e Sistemas Meteorol{\'o}gicos \\ Em conformidade com o Manual Vaisala M212986EN-C}
+\date{\today}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+% SLIDE DE CAPA
+% -----------------------------------------------------------------------------
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SUMARIO
+% -----------------------------------------------------------------------------
+\begin{frame}{Sum{\'a}rio da Apresenta{\c{c}}{\~a}o}
+    \tableofcontents
+\end{frame}
+
+% =============================================================================
+\section{Escopo, Objetivos e Paradigma Tecnol{\'o}gico}
+% =============================================================================
+
+\begin{frame}{Objetivos do Teste de Aceita{\c{c}}{\~a}o em F{\'a}brica (FAT)}
+    \begin{block}{Finalidade do FAT}
+        Validar integralmente em bancada e ambiente fabril todos os subsistemas mec{\^a}nicos, el{\'e}tricos, de RF e de software antes da libera{\c{c}}{\~a}o para transporte (\textit{Ready for Shipment}).
+    \end{block}
+
+    \vspace{0.2cm}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Crit{\'e}rios de Aceita{\c{c}}{\~a}o:}
+            \begin{itemize}
+                \item Conformidade dimensional e estrutural.
+                \item Estabilidade e precis{\~a}o do servo-sistema ($\le \pm 0.05^\circ$).
+                \item Sintonia de fase dos m{\'o}dulos SSPA ($\Delta\Phi \le \pm 5^\circ$).
+                \item Sensibilidade do receptor ($MDS \le -112\text{ dBm}$).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Normas e Manuais de Refer{\^e}ncia:}
+            \begin{itemize}
+                \item Manual de Opera{\c{c}}{\~a}o e Manuten{\c{c}}{\~a}o: \texttt{M212986EN-C}.
+                \item Guia do Usu{\'a}rio RVP10: \texttt{M212604EN}.
+                \item Guia de Utilit{\'a}rios IRIS \& RDA: \texttt{M212925EN}.
+                \item Aterramento e Prote{\c{c}}{\~a}o: \texttt{FAA-STD-019E}.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Evolu{\c{c}}{\~a}o Tecnol{\'o}gica: Valvulado vs. Estado S{\'o}lido (SSPA)}
+    \begin{table}[]
+        \centering
+        \small
+        \renewcommand{\arraystretch}{1.15}
+        \begin{tabular}{p{3.8cm} p{4.8cm} p{5.5cm}}
+            \toprule
+            \textbf{Caracter{\'i}stica} & \textbf{Radar Valvulado (Magnetron)} & \textbf{Estado S{\'o}lido (Vaisala WRS300)} \\
+            \midrule
+            \textbf{Tecnologia TX} & V{\'a}lvulas de v{\'a}cuo de alta tens{\~a}o & M{\'o}dulos SSPA semicondutores (\textbf{WRN311}) \\
+            \textbf{Tens{\~a}o Operacional} & $10\text{ a }35\text{ kV}$ (Risco de choque e raios-X) & \textbf{$50\text{ VDC}$} (Baixa tens{\~a}o e seguro) \\
+            \textbf{Pot{\^e}ncia \& Pulso} & Pico alto ($250\text{ kW}$), pulsos curtos & Pico moderado + \textbf{Compress{\~a}o de Pulso} \\
+            \textbf{Toler{\^a}ncia a Falhas} & Ponto {\'U}nico de Falha (Queima = Parada) & \textbf{Graceful Degradation} (Redund{\^a}ncia modular) \\
+            \textbf{Vida {\'U}til (MTBF)} & $15.000\text{ a }30.000\text{ h}$ (Trocas frequentes) & \textbf{$> 100.000\text{ h}$} (Alta confiabilidade) \\
+            \textbf{Estabilidade de Fase} & Fase inicial aleat{\'o}ria (Requer lock) & \textbf{Totalmente Coerente} (Sintetizador digital) \\
+            \textbf{Consumo \& OPEX} & Alto consumo e pesada refrigera{\c{c}}{\~a}o & \textbf{Alta efici{\^e}ncia energ{\'e}tica} e baixo TCO \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{O Paradigma SST: Compress{\~a}o de Pulso e Mascaramento de Clutter}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Desafio da Baixa Pot{\^e}ncia de Pico}
+                Para compensar a menor pot{\^e}ncia de pico dos m{\'o}dulos SSPA, utilizam-se pulsos expandidos (ex: $40\,\mu\text{s}$) e t{\'e}cnicas de \textbf{Compress{\~a}o de Pulso} via filtro casado.
+            \end{block}
+            
+            \begin{alertblock}{Risco: L{\'o}bulos Secund{\'a}rios (PSLR)}
+                O espalhamento temporal p{\'o}s-compress{\~a}o pode causar mascaramento de ecos hidrometeorol{\'o}gicos t{\^e}nuis pela energia refletida de \textit{Ground Clutter}.
+            \end{alertblock}
+        \end{column}
+        
+        \begin{column}{0.48\textwidth}
+            \begin{exampleblock}{Solu{\c{c}}{\~a}o Implementada no WRS300 / RVP10}
+                \begin{itemize}
+                    \item Formas de onda moduladas e suporte a pulsos h{\'i}bridos (\textit{Hybrid Pulsing}).
+                    \item Algoritmo adaptativo \textbf{GMAP} para supress{\~a}o de clutter ($CSR > 40\text{ dB}$).
+                    \item Abertura para modula{\c{c}}{\~o}es avan{\c{c}}adas (como \textbf{F-NLFM / FOST}, atingindo $PSLR \le -50\text{ dB}$ com $0\text{ dB}$ de \textit{mismatch loss}).
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Arquitetura, Mec{\^a}nica e Seguran{\c{c}}a}
+% =============================================================================
+
+\begin{frame}{Arquitetura do Radar Vaisala WRS300}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Subsistemas Principais:}
+            \begin{itemize}
+                \item \textbf{Antena e Pedestal:} Feixe sim{\'e}trico de $0.95^\circ$, ganho de $45.0\text{ dB}$, acionamento por correias (\textit{belt drive}).
+                \item \textbf{Transmissor SSPA:} Matriz com unidades amplificadoras \textbf{WRN311} (canais H e V independentes).
+                \item \textbf{Receptor Digital / DSP:} \textbf{Vaisala RVP10} (plataforma Linux de alta capacidade).
+                \item \textbf{Controle de Antena:} \textbf{RCP8} e rede CAN-Bus.
+                \item \textbf{Infraestrutura:} Gabinete com MDU, PPU, desidratador e no-break (UPS).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.46\textwidth}
+            \begin{block}{Fluxo de Sinais e Dados}
+                $$\text{Antena} \leftrightarrow \text{SSPA/Circuladores} \leftrightarrow \text{RVP10 (IF Digital)}$$
+                $$\text{RVP10} \xrightarrow{\text{I/Q e Momentos}} \text{IRIS Focus / Analysis}$$
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Inspe{\c{c}}{\~a}o Mec{\^a}nica, Pedestal e Guias de Onda}
+    \begin{itemize}
+        \item \textbf{Tens{\~a}o e Desgaste das Correias (Az/El):} Verifica{\c{c}}{\~a}o da flex{\~a}o da correia sob press{\~a}o manual e inspe{\c{c}}{\~a}o contra fissuras.
+        \item \textbf{Sensores de Proximidade da Correia de Azimute:} Ajuste de dist{\^a}ncia a $5\text{ mm}$ e valida{\c{c}}{\~a}o dos LEDs amarelos indicadores de alinhamento.
+        \item \textbf{Guias de Onda e Desidratador:} Inspe{\c{c}}{\~a}o de estanqueidade e cor da s{\'i}lica gel no desidratador (laranja = seco / branco = saturado).
+        \item \textbf{Alimentador (\textit{Feedhorn}):} Verifica{\c{c}}{\~a}o visual da integridade do filme protetor contra intemp{\'e}ries.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Alinhamento Angular e Verifica{\c{c}}{\~a}o de Fins de Curso}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Zero de Eleva{\c{c}}{\~a}o (Fio de Prumo / \textit{Plumb Line})}
+                \begin{itemize}
+                    \item Fio de prumo fixado na borda superior do refletor.
+                    \item Ajuste no utilit{\'a}rio \texttt{Antx} (\texttt{RCP> a e}).
+                    \item Toler{\^a}ncia: Leitura de $0.00^\circ \pm 0.05^\circ$ verificada em 3 azimutes ($120^\circ$).
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Fins de Curso (\textit{Limit Switches})}
+                \begin{itemize}
+                    \item \textbf{Eleva{\c{c}}{\~a}o Inferior:} Ativa{\c{c}}{\~a}o do alarme no \texttt{Bitex} entre \textbf{$-3.0^\circ$ e $-3.5^\circ$}.
+                    \item \textbf{Eleva{\c{c}}{\~a}o Superior:} Ativa{\c{c}}{\~a}o do alarme no \texttt{Bitex} entre \textbf{$+110^\circ$ e $+112^\circ$}.
+                    \item Valida{\c{c}}{\~a}o de intertravamento: servo s{\'o} reativa ap{\'o}s comando de Reset no \texttt{Antenna utility}.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Sistema de Seguran{\c{c}}a e Unidade de Prote{\c{c}}{\~a}o (PPU)}
+    \begin{itemize}
+        \item \textbf{Loop de Parada de Emerg{\^e}ncia (E-Stop):} Corte imediato da alimenta{\c{c}}{\~a}o dos acionamentos e transmissores ao acionar os bot{\~o}es de emerg{\^e}ncia na PPU ou console de seguran{\c{c}}a.
+        \item \textbf{Loop de Interlock do Radome:} Bloqueio instant{\^a}neo de radia{\c{c}}{\~a}o RF e movimento ao abrir a escotilha (monitoramento de 2 canais NC).
+        \item \textbf{Rearme Seguro (Reset):} Temporiza{\c{c}}{\~a}o de 3 segundos no bot{\~a}o de Reset da console para retorno seguro ao estado operacional (LED indicador vermelho).
+        \item \textbf{M{\'o}dulos de Prote{\c{c}}{\~a}o contra Surtos (MDU):} Inspe{\c{c}}{\~a}o dos m{\'o}dulos de DPS (LED verde = operacional / vermelho = substitu{\'i}vel).
+    \end{itemize}
+\end{frame}
+
+% =============================================================================
+\section{Transmissor SSPA e Calibra{\c{c}}{\~a}o de Fase}
+% =============================================================================
+
+\begin{frame}{Transmissor SSPA: Sintonia de Fase dos M{\'o}dulos WRN311}
+    \begin{block}{Necessidade da Sintonia de Fase (\textit{Phase Tuning})}
+        A pot{\^e}ncia RF total {\'e} obtida combinando os m{\'o}dulos WRN311 nos canais H e V. O alinhamento de fase {\'e} obrigat{\'o}rio para maximizar a pot{\^e}ncia somada e evitar dissipa{\c{c}}{\~a}o t{\'e}rmica destrutiva nas cargas de termina{\c{c}}{\~a}o do combinador.
+    \end{block}
+
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \textbf{Procedimento de Ajuste:}
+            \begin{enumerate}
+                \item No \texttt{Bitex}, ativa-se o \textit{Trigger} de apenas um m{\'o}dulo de refer{\^e}ncia (ex: HTx1 / VTx1).
+                \item No \texttt{Ascope}, monitora-se a fase diferencial $\Phi_{DP}$.
+                \item Ajusta-se o sintonizador mec{\^a}nico frontal do m{\'o}dulo at{\'e} que $\Phi_{DP}$ convirja dentro de \textbf{$\pm 5^\circ$}.
+                \item Travamento com chave de torque para fixa{\c{c}}{\~a}o mec{\^a}nica.
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{exampleblock}{Sensibilidade do Ajuste}
+                1 volta completa no parafuso sintonizador corresponde a aproximadamente $\sim 7^\circ$ de deslocamento de fase.
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Testes de RF e Pot{\^e}ncia de Transmiss{\~a}o (Banda C)}
+    \begin{table}[]
+        \centering
+        \small
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{lccc}
+            \toprule
+            \textbf{Par{\^a}metro de RF} & \textbf{Especifica{\c{c}}{\~a}o WRS300} & \textbf{Valor Medido no FAT} & \textbf{Status} \\
+            \midrule
+            Frequ{\^e}ncia Central & $5.60\text{ a }5.65\text{ GHz}$ & $5.625\text{ GHz}$ & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Pot{\^e}ncia de Pico TX (H / V) & Nominal por configura{\c{c}}{\~a}o & Conforme Especificado & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Larguras de Pulso (PW0..PW3) & $0.5\,\mu\text{s} \text{ a } 40\,\mu\text{s}$ & Validado no Ascope & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Pureza Espectral \& Harm{\^o}nicos & $<-55\text{ dBc}$ & $<-62\text{ dBc}$ & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Atenua{\c{c}}{\~a}o Acopladores H/V & Registro [4A] e [4G] & Calibrado & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+% =============================================================================
+\section{Receptor RVP10 e Calibra{\c{c}}{\~o}es}
+% =============================================================================
+
+\begin{frame}{Receptor Digital RVP10 e Calibra{\c{c}}{\~a}o de Refletividade ($Z$)}
+    \begin{enumerate}
+        \item \textbf{Medi{\c{c}}{\~a}o Externa com Sensor T{\'e}rmico de RF:}
+        Leitura de pot{\^e}ncia m{\'e}dia e de sinal de teste nos acopladores direcionais H e V da antena.
+        \item \textbf{Aquisi{\c{c}}{\~a}o de Par{\^a}metros no \texttt{Dspx}:}
+        Coleta de pot{\^e}ncias de \textit{burst}, perdas de filtro digital (\textit{Rx Loss}) e largura de banda equivalente de ru{\'i}do (\textit{NEBW}) para cada pulso (\texttt{PW\#0} a \texttt{PW\#3}).
+        \item \textbf{Configura{\c{c}}{\~a}o em \texttt{Setup} $\to$ \texttt{RVP Setups}:}
+        Atualiza{\c{c}}{\~a}o das perdas e constantes na equa{\c{c}}{\~a}o de radar.
+        \item \textbf{Execu{\c{c}}{\~a}o da Rotina \texttt{zauto}:}
+        Calibra{\c{c}}{\~a}o ponto a ponto por pulso e canal com antena apontada a $30^\circ$ de eleva{\c{c}}{\~a}o em azimute desobstru{\'i}do.
+        \item \textbf{Grava{\c{c}}{\~a}o da Tabela de Calibra{\c{c}}{\~a}o:}
+        Finaliza{\c{c}}{\~a}o via utilit{\'a}rio \texttt{ZCAL}.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Calibra{\c{c}}{\~o}es Polarim{\'e}tricas: $Z_{DR}$ e $L_{DR}$}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Calibra{\c{c}}{\~a}o de $Z_{DR}$ (\texttt{zdrcal})}
+                \begin{itemize}
+                    \item Varredura zenital de $360^\circ$ a $90^\circ$ de eleva{\c{c}}{\~a}o (\textit{Birdbath scan}).
+                    \item Precipita{\c{c}}{\~a}o homog{\^e}nea ou alvo padr{\~a}o como refer{\^e}ncia de simetria.
+                    \item Ajuste do offset $Z_{DR}$ no RVP10 com toler{\^a}ncia estrita de \textbf{$\pm 0.15\text{ dB}$}.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Calibra{\c{c}}{\~a}o Solar (\texttt{suncal})}
+                \begin{itemize}
+                    \item Varredura autom{\'a}tica do disco solar em c{\'e}u limpo.
+                    \item Determina{\c{c}}{\~a}o do offset de $L_{DR}$ (\textit{XDR}).
+                    \item Valida{\c{c}}{\~a}o cruzada do alinhamento azimutal da antena no nascer e p{\^o}r do sol.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Software IRIS, Bitex e Ciberseguran{\c{c}}a}
+% =============================================================================
+
+\begin{frame}{Supervis{\~a}o Remota com o Utilit{\'a}rio Bitex}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Telas Principais do Bitex:}
+            \begin{itemize}
+                \item \textbf{General:} Status de interlocks, bypass de seguran{\c{c}}a, telemetria da UPS e baterias.
+                \item \textbf{Transceiver:} Comunica{\c{c}}{\~a}o Ethernet dos cart{\~o}es de controle, status do IFDR, sintetizador e conversores de RF.
+                \item \textbf{Antenna \& Pedestal:} Monitoramento de correntes, temperaturas dos motores/engrenagens, aquecedores e barramento CAN.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{C{\'o}digo de Cores BITE}
+                \begin{itemize}
+                    \item \textcolor{AccentGreen}{\textbf{Verde (OK):}} Opera{\c{c}}{\~a}o normal.
+                    \item \textcolor{WarningYellow}{\textbf{Amarelo (Warning):}} Aviso operacional / aten{\c{c}}{\~a}o.
+                    \item \textcolor{red}{\textbf{Vermelho (Alarm):}} Falha cr{\'i}tica / intertravamento.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Ambiente IRIS, Processamento e Ciberseguran{\c{c}}a}
+    \begin{itemize}
+        \item \textbf{Gerenciamento de Modos no IRIS:} Valida{\c{c}}{\~a}o dos estados operacionais (\texttt{0\_ALL\_OFF}, \texttt{1\_STOP}, \texttt{2\_RADIATE}, \texttt{DEFAULT}).
+        \item \textbf{Agendamento de Tarefas (\texttt{TSC Monitor}):} Execu{\c{c}}{\~a}o cont{\'i}nua de varreduras volum{\'e}tricas, PPI, RHI e gera{\c{c}}{\~a}o de produtos meteorol{\'o}gicos.
+        \item \textbf{Integridade de Processos RDA (\texttt{ps\_iris}):} Monitoramento dos daemons \texttt{IRIS\_SERVER}, \texttt{IRIS\_INGEST}, \texttt{IRIS\_INGFIO} e \texttt{IRIS\_NETWORK}.
+        \item \textbf{Ciberseguran{\c{c}}a e Diagn{\'o}stico:}
+        \begin{itemize}
+            \item RVP10 auditado segundo padr{\~o}es \textbf{OWASP ASVS} com acesso seguro via SSH/HTTPS.
+            \item Pacote completo de telemetria coletado via script \texttt{collect\_irisrda\_logs}.
+            \item Backup das configura{\c{c}}{\~o}es RDA exportado com sucesso (\texttt{/etc/vaisala/irisrda}).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% =============================================================================
+\section{Conclus{\~a}o e Pr{\'o}ximos Passos (SAT)}
+% =============================================================================
+
+\begin{frame}{Matriz de Conformidade Consolidada do FAT}
+    \begin{table}[]
+        \centering
+        \small
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{lcccc}
+            \toprule
+            \textbf{M{\'o}dulo de Teste} & \textbf{Itens Executados} & \textbf{Conforme} & \textbf{Pend{\^e}ncias} & \textbf{Resultado} \\
+            \midrule
+            Inspe{\c{c}}{\~a}o Visual \& Mec{\^a}nica & 8 & 8 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Seguran{\c{c}}a, Interlocks e PPU & 6 & 6 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Transmissor SSPA (Fase e Pot{\^e}ncia) & 8 & 8 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Receptor Digital RVP10 \& RF & 10 & 10 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Calibra{\c{c}}{\~o}es (Refletividade e Dual-Pol) & 6 & 6 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            Software IRIS, Bitex e Rede & 7 & 7 & 0 & \textcolor{AccentGreen}{\textbf{Aprovado}} \\
+            \midrule
+            \textbf{Total Consolidado} & \textbf{45} & \textbf{45} & \textbf{0} & \textcolor{AccentGreen}{\textbf{100\% Aprovado}} \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+    
+    \vspace{0.3cm}
+    \begin{center}
+        \textbf{Parecer T{\'e}cnico:} Equipamento formalmente aprovado e liberado para expedi{\c{c}}{\~a}o (\textit{Ready for Shipment}).
+    \end{center}
+\end{frame}
+
+\begin{frame}{Pr{\'o}ximas Etapas: Log{\'i}stica e Transi{\c{c}}{\~a}o para o SAT}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Prepara{\c{c}}{\~a}o para Despacho:}
+            \begin{itemize}
+                \item Desmontagem controlada e travamento mec{\^a}nico do pedestal.
+                \item Embalagem adequada para transporte mar{\'i}timo/rodovi{\'a}rio.
+                \item Envio dos manuais e certificados de calibra{\c{c}}{\~a}o em f{\'a}brica.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Pr{\'e}-requisitos e Atividades no S{\'i}tio (SAT):}
+            \begin{itemize}
+                \item Verifica{\c{c}}{\~a}o da torre, anel de aterramento ($< 5\,\Omega$) e energia (32A m{\'i}n.).
+                \item I{\c{c}}amento e montagem do radar e do radome.
+                \item Execu{\c{c}}{\~a}o dos testes de aceita{\c{c}}{\~a}o em s{\'i}tio (SAT) com valida{\c{c}}{\~a}o de ecos reais.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \Huge \textbf{Obrigado pela Aten{\c{c}}{\~a}o!} \\
+    \vspace{1cm}
+    \Large \textbf{Sess{\~a}o Aberta para Perguntas e Discuss{\~o}es} \\
+    \vspace{0.5cm}
+    \normalsize Equipe T{\'e}cnica de Radares Meteorol{\'o}gicos -- WRS300 / RVP10
+\end{frame}
+
+\end{document}
