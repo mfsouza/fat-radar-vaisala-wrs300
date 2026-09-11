@@ -10,9 +10,11 @@
 \usepackage{tikz}
 \usepackage{colortbl}
 
-% Paleta de cores corporativa e academica (Vaisala + UFPR)
+% Paleta de cores institucional e corporativa
 \definecolor{VaisalaBlue}{RGB}{0, 45, 98}
 \definecolor{UFPRBlue}{RGB}{0, 85, 164}
+\definecolor{IATGreen}{RGB}{0, 133, 66}
+\definecolor{SimeparBlue}{RGB}{0, 102, 179}
 \definecolor{AccentGreen}{RGB}{34, 139, 34}
 \definecolor{WarningYellow}{RGB}{218, 165, 32}
 
@@ -30,18 +32,77 @@
 
 % Informacoes da Apresentacao
 \title[FAT -- Radar Banda C Vaisala WRS300]{Factory Acceptance Test (FAT) \\ Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}
-\subtitle{Procedimentos de Aceita{\c{c}}{\~a}o em F{\'a}brica, Processador RVP10 e Paradigma de Estado S{\'o}lido}
+\subtitle{\textbf{Projeto Monitora Paran{\'a}} \\ Procedimentos de Aceita{\c{c}}{\~a}o em F{\'a}brica, Processador RVP10 e Paradigma SST}
 \author[Moises F. de Souza]{Moises Fernandes de Souza}
-\institute[Vaisala / UFPR]{Engenharia de Radares e Sistemas Meteorol{\'o}gicos \\ Em conformidade com o Manual Vaisala M212986EN-C}
+\institute[IAT / SIMEPAR / Vaisala]{
+    \textbf{Adquirente:} Instituto {\'A}gua e Terra (IAT) -- Governo do Paran{\'a} \\
+    \textbf{Consultoria e Apoio T{\'e}cnico:} SIMEPAR \\
+    \textbf{Fabricante:} Vaisala Oyj -- Manual M212986EN-C
+}
 \date{\today}
 
 \begin{document}
 
 % -----------------------------------------------------------------------------
-% SLIDE DE CAPA
+% SLIDE DE CAPA COM LOGOS INSTITUCIONAIS
 % -----------------------------------------------------------------------------
-\begin{frame}
-    \titlepage
+\begin{frame}[plain]
+    \vspace{0.3cm}
+    % Logos no Cabecalho
+    \begin{center}
+        \begin{tabular}{c c c}
+            \includegraphics[height=1.0cm]{img/logo_iat.png} & 
+            \hspace{1.2cm}
+            \includegraphics[height=1.0cm]{img/logo_simepar.png} & 
+            \hspace{1.2cm}
+            \includegraphics[height=0.9cm]{img/logo_vaisala.png}
+        \end{tabular}
+    \end{center}
+
+    \vspace{0.2cm}
+    \centering
+    {\Large \textbf{\textcolor{VaisalaBlue}{Factory Acceptance Test (FAT)}}} \\
+    {\large \textbf{Radar Meteorol{\'o}gico Banda C SSPA -- Vaisala WRS300}} \\
+    \vspace{0.2cm}
+    {\small \textbf{\textcolor{UFPRBlue}{PROJETO MONITORA PARAN{\'A}}}} \\
+    \vspace{0.3cm}
+
+    \begin{beamercolorbox}[sep=4pt,center,rounded=true,shadow=true]{block body}
+        \footnotesize
+        \textbf{Adquirente / Contratante:} Instituto {\'A}gua e Terra (IAT) -- Governo do Estado do Paran{\'a} \\
+        \textbf{Apoio T{\'e}cnico, Consultoria e Opera{\c{c}}{\~a}o:} SIMEPAR \\
+        \textbf{Respons{\'a}vel T{\'e}cnico / Apresentador:} Moises Fernandes de Souza
+    \end{beamercolorbox}
+
+    \vspace{0.2cm}
+    {\scriptsize Data: \today \quad | \quad Procedimentos em conformidade com o Manual Vaisala \texttt{M212986EN-C}}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% CONTEXTUALIZACAO INSTITUCIONAL: PROJETO MONITORA PARANA
+% -----------------------------------------------------------------------------
+\begin{frame}{Contexto Institucional: Projeto Monitora Paran{\'a}}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Aquisi{\c{c}}{\~a}o pelo IAT (Governo do Paran{\'a})}
+                \begin{itemize}
+                    \item Iniciativa estrat{\'e}gica do \textbf{Instituto {\'A}gua e Terra (IAT)} para fortalecimento da seguran{\c{c}}a h{\'i}drica e gest{\~a}o ambiental.
+                    \item Moderniza{\c{c}}{\~a}o da infraestrutura de monitoramento cont{\'i}nuo de eventos hidrometeorol{\'o}gicos severos.
+                    \item Suporte {\`a} tomada de decis{\~a}o na preven{\c{c}}{\~a}o de desastres naturais e apoio {\`a} Defesa Civil.
+                \end{itemize}
+            \end{block}
+        \end{column}
+
+        \begin{column}{0.48\textwidth}
+            \begin{exampleblock}{Papel Estrat{\'e}gico do SIMEPAR}
+                \begin{itemize}
+                    \item \textbf{Apoio T{\'e}cnico e Consultoria Especializada:} Elabora{\c{c}}{\~a}o de especifica{\c{c}}{\~o}es, acompanhamento e valida{\c{c}}{\~a}o do FAT/SAT.
+                    \item \textbf{Opera{\c{c}}{\~a}o e Manuten{\c{c}}{\~a}o (O\&M):} Integra{\c{c}}{\~a}o com a rede estadual de radares e assimila{\c{c}}{\~a}o em modelos num{\'e}ricos.
+                    \item \textbf{Gera{\c{c}}{\~a}o de Produtos:} Distribui{\c{c}}{\~a}o em tempo real para centros de alerta e previs{\~a}o de \textit{nowcasting}.
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -52,7 +113,7 @@
 \end{frame}
 
 % =============================================================================
-\section{Escopo, Objetivos e Paradigma Tecnol{\'o}gico}
+\section{Escopo do FAT e Paradigma Tecnol{\'o}gico SST}
 % =============================================================================
 
 \begin{frame}{Objetivos do Teste de Aceita{\c{c}}{\~a}o em F{\'a}brica (FAT)}
@@ -323,7 +384,7 @@
 \end{frame}
 
 % =============================================================================
-\section{Conclus{\~a}o e Pr{\'o}ximos Passos (SAT)}
+\section{Conclus{\~a}o e Transi{\c{c}}{\~a}o para o SAT}
 % =============================================================================
 
 \begin{frame}{Matriz de Conformidade Consolidada do FAT}
@@ -377,10 +438,11 @@
 \begin{frame}
     \centering
     \Huge \textbf{Obrigado pela Aten{\c{c}}{\~a}o!} \\
-    \vspace{1cm}
+    \vspace{0.8cm}
     \Large \textbf{Sess{\~a}o Aberta para Perguntas e Discuss{\~o}es} \\
-    \vspace{0.5cm}
-    \normalsize Equipe T{\'e}cnica de Radares Meteorol{\'o}gicos -- WRS300 / RVP10
+    \vspace{0.6cm}
+    \small \textbf{Projeto Monitora Paran{\'a}} \\
+    \footnotesize Instituto {\'A}gua e Terra (IAT) \quad | \quad SIMEPAR \quad | \quad Vaisala
 \end{frame}
 
 \end{document}
